@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Rohit Adhikari · Geomatics Engineer & GIS Portfolio</title>
+<!-- Fonts & Leaflet -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #05070f;
+    color: #eef5ff;
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  /* modern scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #0f121c; }
+  ::-webkit-scrollbar-thumb { background: #2c9b8f; border-radius: 10px; }
+
+  /* container */
+  .container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 1.8rem 2rem;
+  }
+
+  /* ========== PORTFOLIO HERO SECTION (TOP FOCUS) ========== */
+  .portfolio-hero {
+    background: linear-gradient(125deg, #0b1120 0%, #07101a 100%);
+    border-radius: 2rem;
+    padding: 2rem 2.5rem;
+    margin-bottom: 2.8rem;
+    border: 1px solid rgba(44, 155, 143, 0.35);
+    box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+    backdrop-filter: blur(2px);
+  }
+
+  .hero-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .hero-left {
+    flex: 2;
+    min-width: 240px;
+  }
+
+  .hero-avatar {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .avatar-img {
+    width: 95px;
+    height: 95px;
+    background: #1e2a3a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #2c9b8f;
+    box-shadow: 0 0 20px rgba(44,155,143,0.3);
+    background: #0f1725;
+  }
+
+  .avatar-img svg {
+    width: 52px;
+    height: 52px;
+    stroke: #2c9b8f;
+    fill: none;
+    stroke-width: 1.8;
+  }
+
+  .hero-name h1 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-family: 'Playfair Display', serif;
+  }
+  .hero-name h1 span { color: #2c9b8f; font-style: italic; }
+  .hero-name .tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: #8d9aaf;
+    margin-top: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin: 1.6rem 0 1rem;
+    flex-wrap: wrap;
+  }
+  .stat-badge {
+    background: #0f1622;
+    padding: 0.4rem 1rem;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid #1f2a3e;
+  }
+  .stat-badge strong { color: #2c9b8f; font-size: 1.1rem; margin-right: 4px; }
+
+  .hero-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .hero-contact a, .hero-contact span {
+    color: #b9c7dd;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #0a0f1a;
+    padding: 4px 12px;
+    border-radius: 24px;
+    border: 1px solid #202a38;
+  }
+  .hero-contact a:hover { color: #2c9b8f; border-color: #2c9b8f; }
+
+  .hero-right {
+    flex: 1.2;
+    background: rgba(12, 18, 28, 0.6);
+    border-radius: 1.5rem;
+    padding: 1.2rem 1.6rem;
+    backdrop-filter: blur(4px);
+    border: 1px solid #2c3f4f;
+  }
+  .quick-info p {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px dashed #1e2a38;
+    padding-bottom: 7px;
+  }
+  .quick-info .q-label { width: 85px; color: #7d8cad; font-weight: 500; }
+  .resume-btn-port {
+    margin-top: 16px;
+    background: #1a2a2f;
+    border: 1px solid #2c9b8f;
+    padding: 8px 18px;
+    border-radius: 32px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.75rem;
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .resume-btn-port:hover { background: #2c9b8f; color: #05070f; border-color: #2c9b8f; }
+
+  /* two column layout (skills + education) */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .info-card {
+    background: #0c111d;
+    border-radius: 1.5rem;
+    padding: 1.3rem 1.6rem;
+    border: 1px solid #192230;
+  }
+  .card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #2c9b8f;
+    margin-bottom: 1rem;
+  }
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .skill {
+    background: #101725;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    border: 1px solid #293544;
+  }
+  .skill.gis { border-left: 3px solid #2c9b8f; }
+  .skill.prog { border-left: 3px solid #f5a623; }
+  .skill.db { border-left: 3px solid #4a8fe8; }
+
+  .edu-item {
+    margin-bottom: 1rem;
+    border-left: 2px solid #2c9b8f;
+    padding-left: 14px;
+  }
+  .edu-year { font-family: monospace; font-size: 0.7rem; color: #2c9b8f; }
+  .edu-inst { font-weight: 600; margin: 4px 0 2px; }
+  .edu-deg { font-size: 0.75rem; color: #9aaec5; }
+
+  /* certifications strip */
+  .certs-strip {
+    background: #0a0f1a;
+    border-radius: 1.2rem;
+    padding: 1rem 1.6rem;
+    margin-bottom: 2.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cert-item { font-size: 0.7rem; font-family: monospace; background: #111a24; padding: 4px 12px; border-radius: 30px; }
+
+  /* ========== NEPAL TOURISM GIS PROJECT SECTION ========== */
+  .project-showcase {
+    margin: 2rem 0 1rem;
+  }
+  .section-badge {
+    display: inline-block;
+    background: #1f2f34;
+    padding: 4px 18px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  .gis-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-family: 'Playfair Display', serif;
+  }
+  .gis-container {
+    background: #0b1120;
+    border-radius: 1.8rem;
+    overflow: hidden;
+    border: 1px solid #2a3a44;
+    margin-bottom: 2rem;
+  }
+  .map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1.2rem;
+    background: #0a0f1c;
+    border-bottom: 1px solid #1e2a36;
+    flex-wrap: wrap;
+  }
+  .map-legend-badge {
+    display: flex;
+    gap: 12px;
+    font-size: 0.65rem;
+  }
+  .map-wrapper {
+    height: 460px;
+    width: 100%;
+    position: relative;
+  }
+  #full-map {
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+  }
+  .info-panel-mini {
+    padding: 1rem 1.2rem;
+    background: #070c16;
+    border-top: 1px solid #1f2f3c;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .layer-toggles {
+    display: flex;
+    gap: 15px;
+  }
+  .layer-btn {
+    background: none;
+    border: 1px solid #2a3f4a;
+    padding: 4px 10px;
+    border-radius: 24px;
+    font-size: 0.65rem;
+    cursor: pointer;
+    color: #ccdeee;
+  }
+  .layer-btn.active {
+    background: #2c9b8f;
+    border-color: #2c9b8f;
+    color: #000;
+  }
+
+  /* insights under map */
+  .insight-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 1.2rem;
+    margin: 1.6rem 0 2rem;
+  }
+  .insight-card {
+    background: #0e1422;
+    border-radius: 1.2rem;
+    padding: 1rem;
+    border-left: 4px solid #2c9b8f;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #19232f;
+    font-size: 0.7rem;
+    color: #677b97;
+  }
+
+  @media (max-width: 780px) {
+    .container { padding: 1rem; }
+    .hero-flex { flex-direction: column; }
+    .profile-grid { grid-template-columns: 1fr; }
+  }
+
+  .leaflet-popup-content-wrapper {
+    background: #0e131f !important;
+    color: #eee;
+    border-left: 3px solid #2c9b8f;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- ######## PORTFOLIO SECTION (TOP PRIORITY) ######## -->
+  <div class="portfolio-hero">
+    <div class="hero-flex">
+      <div class="hero-left">
+        <div class="hero-avatar">
+          <div class="avatar-img">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+              <path d="M12 3v8" /><path d="M9 7h6" />
+            </svg>
+          </div>
+          <div class="hero-name">
+            <h1>Rohit <span>Adhikari</span></h1>
+            <div class="tagline">Geomatics Engineering · GIS Specialist · Web Cartographer</div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-badge"><strong>📍</strong> Pokhara, Kaski, Nepal</div>
+          <div class="stat-badge"><strong>🎓</strong> B.E. Geomatics (2022 – present)</div>
+          <div class="stat-badge"><strong>🗺</strong> 7+ GIS Projects</div>
+        </div>
+        <div class="hero-contact">
+          <a href="tel:+9779862385920">📞 +977-9862385920</a>
+          <a href="mailto:adhikariprabeash13@gmail.com">✉ adhikariprabeash13@gmail.com</a>
+          <span>🌐 Pokhara-33</span>
+        </div>
+        <div class="resume-btn-port" onclick="alert('📄 Rohit_Adhikari_CV_Geomatics.pdf (demo)')">⬇ Download CV / Resume</div>
+      </div>
+      <div class="hero-right">
+        <div class="quick-info">
+          <p><span class="q-label">Profile</span> <span>Geomatics student with strong focus on GIS, spatial analysis & remote sensing. Passionate about applying geospatial tech in disaster mgmt & land admin.</span></p>
+          <p><span class="q-label">Hobbies</span> <span>⚽ Football · 🗺 Cartography · 🏔 Trekking · 📐 GIS Research</span></p>
+          <p><span class="q-label">Languages</span> <span>Nepali · English · Hindi</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills + Education (updated dates: SEE 2018, Grade12 2018-2019, Bachelor 2022–present) -->
+  <div class="profile-grid">
+    <div class="info-card">
+      <div class="card-title">⚡ TECHNICAL SKILLS</div>
+      <div class="skill-list">
+        <span class="skill gis">ArcGIS Pro</span><span class="skill gis">QGIS</span><span class="skill gis">Google Earth Engine</span>
+        <span class="skill gis">Spatial Analysis</span><span class="skill gis">Cartography</span><span class="skill gis">GIS Visualization</span>
+        <span class="skill prog">Leaflet.js</span><span class="skill prog">HTML5/CSS3</span><span class="skill prog">JavaScript</span>
+        <span class="skill db">AHP Modeling</span><span class="skill db">Remote Sensing</span><span class="skill db">Data Analysis</span>
+        <span class="skill db">Microsoft Office</span><span class="skill db">Canva</span>
+      </div>
+      <div class="card-title" style="margin-top: 18px;">🏅 LEADERSHIP & ACHIEVEMENTS</div>
+      <div style="font-size:0.75rem; line-height:1.5; color:#b7c4dd;">
+        • Student Representative, Dept. of Geomatics Engineering, KU<br>
+        • Workshop on Remote Sensing & GEE (May 2026) – Certificate of Participation<br>
+        • GIS Competition Participant – Nepal Geomatics Community<br>
+        • Community coordination & event management
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="card-title">📚 EDUCATION TIMELINE</div>
+      <div class="edu-item"><div class="edu-year">2022 — Present</div><div class="edu-inst">Kathmandu University</div><div class="edu-deg">Bachelor's in Geomatics Engineering (ongoing)</div></div>
+      <div class="edu-item"><div class="edu-year">2018 — 2019</div><div class="edu-inst">Diamond Secondary School</div><div class="edu-deg">Grade 12 – Science (2019)</div></div>
+      <div class="edu-item"><div class="edu-year">2018</div><div class="edu-inst">BVM Higher Secondary School</div><div class="edu-deg">SEE (Grade 10) – 2018</div></div>
+      <div class="card-title" style="margin-top: 20px;">📜 CERTIFICATIONS</div>
+      <div style="display:flex; flex-direction: column; gap:6px; margin-top: 6px;">
+        <div style="font-size:0.7rem;">✔ Basic Remote Sensing & GEE – DoGE, KU (May 2026)</div>
+        <div style="font-size:0.7rem;">✔ Landslide Susceptibility Mapping Workshop (AHP approach)</div>
+        <div style="font-size:0.7rem;">✔ AI in Property Valuation – Research Symposium</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mini certificates row (extra) -->
+  <div class="certs-strip">
+    <span class="cert-item">🏆 GIS Competition Finalist</span>
+    <span class="cert-item">🌍 Google Earth Engine certified (DoGE workshop)</span>
+    <span class="cert-item">📊 AHP Hazard Mapping Expert</span>
+    <span class="cert-item">🧠 AI Research Paper (AVM in Nepal)</span>
+  </div>
+
+  <!-- ######## NEPAL TOURISM GIS PROJECT (SECONDARY POSITION) ######## -->
+  <div class="project-showcase">
+    <div class="section-badge">✦ FEATURED GIS PROJECT ✦</div>
+    <div class="gis-title">🗺 Nepal Tourism Atlas – WebGIS Dashboard</div>
+    <div class="gis-container">
+      <div class="map-header">
+        <span style="font-family: monospace;">🗺 Interactive Choropleth · Tourist Density (Annual)</span>
+        <div class="map-legend-badge">
+          <span>🟢 Low <span style="color:#79e2f2;">■</span> → <span style="color:#0d2136;">■</span> High</span>
+          <span>📍 12+ Major Sites</span>
+        </div>
+      </div>
+      <div class="map-wrapper">
+        <div id="full-map"></div>
+      </div>
+      <div class="info-panel-mini">
+        <div class="layer-toggles">
+          <button class="layer-btn active" data-layer="choropleth">🗺 Density</button>
+          <button class="layer-btn active" data-layer="sites">📍 Sites</button>
+          <button class="layer-btn active" data-layer="borders">🔄 Borders</button>
+        </div>
+        <div>
+          <button class="layer-btn" id="bm-dark">🌙 Dark</button>
+          <button class="layer-btn active" id="bm-topo">⛰️ Topo</button>
+          <button class="layer-btn" id="bm-sat">🛰️ Sat</button>
+        </div>
+        <div style="font-size:0.65rem;"><span id="live-tourism">🟢 Live: 3.2k/hr</span> | <span id="clock-gis">--:--:--</span></div>
+      </div>
+    </div>
+    <div class="insight-row">
+      <div class="insight-card"><strong>📊 Province Insights</strong><br>Bagmati leads with 520k visitors/yr, Gandaki 310k. Koshi (Everest region) 180k.</div>
+      <div class="insight-card"><strong>⛰️ Trekking/Adventure</strong><br>Annapurna Circuit, Everest Base Camp, Mustang, Langtang.</div>
+      <div class="insight-card"><strong>🏛️ UNESCO Heritage</strong><br>Kathmandu Valley (7 monument zones), Lumbini (Buddha's birthplace).</div>
+      <div class="insight-card"><strong>🐅 Wildlife</strong><br>Chitwan NP, Bardia NP, Koshi Tappu – rich biodiversity hotspots.</div>
+    </div>
+  </div>
+  <footer>
+    Data: Nepal Tourism Board 2024 · Province boundaries OCHA/HDX · Geomatics Engineering Portfolio – Rohit Adhikari · Leaflet.js WebGIS
+  </footer>
+</div>
+
+<script>
+  // ---- TOURISM GIS (Leaflet Map with same core data but enhanced) ----
+  const PROVINCES = [
+    { id:1, name:"Koshi Province", num:1, hq:"Biratnagar", area:25905, tourists:180000, density:175, type:"Adventure / Trekking", profile:"Everest Region, Sagarmatha NP, tea gardens.",
+      coords:[[[87.0,26.35],[88.2,26.35],[88.2,27.9],[87.8,28.6],[86.7,28.6],[86.5,27.5],[87.0,26.35]]] },
+    { id:2, name:"Madhesh Province", num:2, hq:"Janakpur", area:9661, tourists:95000, density:634, type:"Pilgrimage", coords:[[[85.6,26.36],[87.0,26.36],[87.0,26.95],[85.6,26.95],[85.6,26.36]]] },
+    { id:3, name:"Bagmati Province", num:3, hq:"Hetauda", area:20300, tourists:520000, density:300, type:"Cultural / Heritage", coords:[[[84.5,26.8],[85.6,26.8],[85.6,28.1],[84.5,28.0],[83.9,27.6],[84.5,26.8]]] },
+    { id:4, name:"Gandaki Province", num:4, hq:"Pokhara", area:21504, tourists:310000, density:115, type:"Adventure / Nature", coords:[[[83.1,28.0],[84.5,28.0],[84.2,29.3],[83.5,29.5],[82.8,29.0],[83.1,28.0]]] },
+    { id:5, name:"Lumbini Province", num:5, hq:"Deukhuri", area:22288, tourists:145000, density:220, type:"Pilgrimage / Wildlife", coords:[[[82.0,27.3],[83.9,27.3],[83.9,28.2],[82.8,28.4],[82.0,28.0],[82.0,27.3]]] },
+    { id:6, name:"Karnali Province", num:6, hq:"Birendranagar", area:27984, tourists:25000, density:61, type:"Ecotourism", coords:[[[81.0,28.3],[82.0,28.3],[82.8,28.8],[82.5,29.8],[81.5,30.0],[80.5,29.7],[80.5,28.8],[81.0,28.3]]] },
+    { id:7, name:"Sudurpashchim Province", num:7, hq:"Dhangadhi", area:19539, tourists:38000, density:131, type:"Wildlife", coords:[[[80.0,28.6],[81.0,28.6],[80.5,29.7],[80.0,30.3],[79.0,30.0],[79.0,28.8],[80.0,28.6]]] }
+  ];
+  const SITES_LIST = [
+    {lat:27.987,lng:86.925,name:"Sagarmatha / Everest NP",col:"#f5a623"},
+    {lat:28.209,lng:83.958,name:"Annapurna Conservation Area",col:"#f5a623"},
+    {lat:27.710,lng:85.314,name:"Kathmandu Valley (UNESCO)",col:"#9b6dff"},
+    {lat:27.573,lng:84.375,name:"Chitwan NP",col:"#3ecf82"},
+    {lat:29.042,lng:82.088,name:"Rara Lake",col:"#4a8fe8"},
+    {lat:27.470,lng:83.276,name:"Lumbini (UNESCO)",col:"#e85d4a"},
+    {lat:26.727,lng:85.926,name:"Janakpur",col:"#e85d4a"},
+    {lat:28.190,lng:81.290,name:"Bardia NP",col:"#3ecf82"},
+    {lat:27.941,lng:85.363,name:"Langtang NP",col:"#f5a623"},
+    {lat:28.217,lng:83.955,name:"Phewa Lake, Pokhara",col:"#4a8fe8"}
+  ];
+
+  const tColor = (t) => t>350000?'#79e2f2':t>150000?'#41b8d5':t>60000?'#2196c4':t>20000?'#1a6b8a':t>5000?'#0e3d5f':'#0d2136';
+
+  const map = L.map('full-map').setView([28.2, 83.8], 7);
+  const tileDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{attribution:'CartoDB'});
+  const tileTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{attribution:'OpenTopoMap'});
+  const tileSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri'});
+  tileTopo.addTo(map);
+  let activeBase = 'topo';
+
+  let choropleth, sitesLayer, bordersLayer;
+  function getFeatures() {
+    return { type:"FeatureCollection", features: PROVINCES.map(p => ({ type:"Feature", properties:p, geometry:{type:"Polygon", coordinates:p.coords} })) };
+  }
+  choropleth = L.geoJSON(getFeatures(), {
+    style: (f) => ({ fillColor: tColor(f.properties.tourists), weight:0.8, fillOpacity:0.8, color: '#6c829e' }),
+    onEachFeature: (feat, layer) => {
+      layer.bindPopup(`
+        <b style="color:#2c9b8f;">${feat.properties.name}</b><br>
+        🏛️ HQ: ${feat.properties.hq}<br>
+        🧳 Visitors: ${feat.properties.tourists.toLocaleString()}/yr<br>
+        🗺️ Area: ${feat.properties.area.toLocaleString()} km²<br>
+        🏷️ Type: ${feat.properties.type}
+      `);
+    }
+  }).addTo(map);
+  
+  sitesLayer = L.layerGroup();
+  SITES_LIST.forEach(s => {
+    L.marker([s.lat,s.lng], {icon: L.divIcon({html:`<div style="width:10px;height:10px;border-radius:50%;background:${s.col};border:1px solid white;box-shadow:0 0 4px;"></div>`, iconSize:[10,10], className:''}) })
+      .bindPopup(`<b>${s.name}</b>`).addTo(sitesLayer);
+  });
+  sitesLayer.addTo(map);
+  
+  bordersLayer = L.geoJSON(getFeatures(), { style: { fill:false, weight:1.5, color:'#b9d8ff', dashArray:'3 4' } }).addTo(map);
+
+  function toggleLayerUI(layerName, active) {
+    if(layerName === 'choropleth') active ? map.addLayer(choropleth) : map.removeLayer(choropleth);
+    if(layerName === 'sites') active ? map.addLayer(sitesLayer) : map.removeLayer(sitesLayer);
+    if(layerName === 'borders') active ? map.addLayer(bordersLayer) : map.removeLayer(bordersLayer);
+  }
+  document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const layer = btn.dataset.layer;
+      const isActive = btn.classList.contains('active');
+      if(isActive) { btn.classList.remove('active'); toggleLayerUI(layer, false); }
+      else { btn.classList.add('active'); toggleLayerUI(layer, true); }
+    });
+  });
+  function switchBase(base){
+    map.removeLayer(activeBase === 'dark' ? tileDark : activeBase === 'topo' ? tileTopo : tileSat);
+    if(base === 'dark') tileDark.addTo(map), activeBase='dark';
+    else if(base === 'topo') tileTopo.addTo(map), activeBase='topo';
+    else tileSat.addTo(map), activeBase='sat';
+  }
+  document.getElementById('bm-dark').onclick = () => switchBase('dark');
+  document.getElementById('bm-topo').onclick = () => switchBase('topo');
+  document.getElementById('bm-sat').onclick = () => switchBase('sat');
+
+  // live feed simulation
+  let liveCount = 3240;
+  setInterval(() => {
+    liveCount += Math.floor(Math.random() * 90) - 20;
+    liveCount = Math.min(3950, Math.max(2600, liveCount));
+    document.getElementById('live-tourism').innerHTML = `🟢 Live: ${(liveCount/1000).toFixed(1)}k/hr`;
+  }, 3800);
+  function updateClock(){ document.getElementById('clock-gis').innerHTML = new Date().toLocaleTimeString(); }
+  updateClock(); setInterval(updateClock,1000);
+</script>
+</body>
+</html>
